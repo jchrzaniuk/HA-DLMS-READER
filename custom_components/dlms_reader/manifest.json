@@ -1,0 +1,13 @@
+{
+  "domain": "dlms_reader",
+  "name": "DLMS/COSEM Reader",
+  "version": "0.2.0",
+  "documentation": "https://github.com/jchrzaniuk/HA-DLMS-READER/blob/main/custom_components/dlms_reader/README.md",
+  "issue_tracker": "https://github.com/jchrzaniuk/HA-DLMS-READER/issues",
+  "config_flow": true,
+  "integration_type": "hub",
+  "iot_class": "local_polling",
+  "after_dependencies": ["hassio", "mqtt"],
+  "requirements": [],
+  "codeowners": ["@jchrzaniuk"]
+}

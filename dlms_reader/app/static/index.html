@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Licznik DLMS · konfiguracja</title><link rel="stylesheet" href="style.css"><script src="app.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="./" aria-label="Konfigurator DLMS">DLMS<span>/COSEM</span></a><span id="connection-status" role="status">Wczytywanie…</span></header>
+  <main>
+    <div class="heading"><div><h1>Konfiguracja licznika DLMS</h1><p>Połączenie z licznikiem, dane dostępu i pomiary w Home Assistant.</p></div><button id="stop" class="quiet" type="button" hidden>Zatrzymaj odczyt</button></div>
+    <div id="message" class="message" role="status" hidden></div>
+    <nav class="steps" aria-label="Etapy konfiguracji">
+      <button type="button" data-step="0" aria-current="step"><span>1</span>Połączenie</button>
+      <button type="button" data-step="1"><span>2</span>Dostęp</button>
+      <button type="button" data-step="2"><span>3</span>Test i rejestry</button>
+      <button type="button" data-step="3"><span>4</span>Home Assistant</button>
+    </nav>
+    <div id="operation-state" class="operation-state" role="status">
+      <p id="operation-description">Wczytywanie stanu odczytu…</p>
+      <button type="button" id="edit" class="quiet" hidden>Zatrzymaj i edytuj</button>
+    </div>
+    <div class="workspace">
+      <form id="configuration" novalidate>
+        <section data-page="0">
+          <h2>Parametry połączenia</h2><p class="intro">Ustaw parametry ręcznie lub wczytaj własny profil. Dodatek nie zawiera wbudowanych profili urządzeń.</p>
+          <label class="wide">Profil użytkownika<select id="profile"><option value="custom">Własna konfiguracja</option></select></label>
+          <details><summary>Zapis i przenoszenie profili</summary>
+            <label>Nazwa profilu<input id="profile-name" maxlength="100" autocomplete="off"></label>
+            <p class="note">Profil zawiera parametry komunikacji i wybrane rejestry. Nie zawiera haseł, kluczy, identyfikatorów systemowych, adresu urządzenia ani ustawień HA i MQTT.</p>
+            <div class="actions"><button type="button" id="profile-save" class="quiet">Zapisz profil</button><button type="button" id="profile-import" class="quiet">Importuj JSON</button><button type="button" id="profile-export" class="quiet">Eksportuj JSON</button></div>
+            <input id="profile-file" type="file" accept=".json,application/json" hidden>
+          </details>
+          <div class="fields">
+            <label>Nazwa w Home Assistant<input data-config="name" autocomplete="off"></label>
+            <label>Stały identyfikator<input data-config="device_id" pattern="[a-z][a-z0-9_]*" autocomplete="off"><small>Zmiana identyfikatora tworzy nowe encje w HA.</small></label>
+            <label class="wide">Transport<select data-config="transport"><option value="tcp_wrapper">TCP · WRAPPER</option><option value="tcp_hdlc">TCP · HDLC przez bramkę</option><option value="serial_hdlc">Port szeregowy · HDLC</option></select></label>
+            <label data-network>Adres IP lub nazwa hosta<input data-config="host" placeholder="licznik.local" autocomplete="off"></label>
+            <label data-network>Port TCP<input data-config="port" type="number" min="1" max="65535"></label>
+            <label class="wide" data-serial hidden>Port szeregowy<input data-config="serial_device" placeholder="/dev/serial/by-id/…" autocomplete="off"><small>Połączenie rozpoczyna się od HDLC, bez wstępnej komunikacji optycznej IEC 62056-21.</small></label>
+            <label data-serial hidden>Prędkość [baud]<input data-config="baudrate" type="number" min="300"></label>
+            <label data-serial hidden>Parzystość<select data-config="parity"><option value="N">Brak</option><option value="E">Parzysta</option><option value="O">Nieparzysta</option></select></label>
+            <label>Adres klienta (SAP)<input data-config="client_address" type="number" min="1"></label>
+            <label data-wrapper>Adres serwera WRAPPER<input data-config="server_address" type="number" min="1" max="65535"></label>
+            <label data-hdlc hidden>Adres logiczny HDLC<input id="hdlc-logical-address" type="number" min="0" max="16383" step="1"><small>Najczęściej 1. Wartość 0 oznacza brak części logicznej.</small></label>
+            <label data-hdlc hidden>Adres fizyczny HDLC<input id="hdlc-physical-address" type="number" min="0" max="16383" step="1"><small>Adres urządzenia na magistrali. Adres złożony jest wyliczany automatycznie.</small></label>
+          </div>
+          <details><summary>Parametry zaawansowane</summary><div class="fields">
+            <label>Adresowanie<select data-config="referencing"><option value="ln">Logical Name (LN)</option><option value="sn">Short Name (SN)</option></select></label>
+            <label>Czas odpowiedzi [s]<input data-config="timeout" type="number" min="1" max="120"></label>
+            <label data-hdlc hidden>Długość adresu HDLC<select data-config="hdlc_address_size"><option value="0">Automatycznie</option><option value="1">1 bajt</option><option value="2">2 bajty</option><option value="4">4 bajty</option></select><small>Wybierz długość wymaganą przez licznik lub pozostaw wybór automatyczny.</small></label>
+            <p class="note" data-hdlc id="hdlc-combined-address" hidden></p>
+            <label>Producent<input data-config="manufacturer"></label><label>Model<input data-config="model"></label>
+            <label data-serial hidden>Bity danych<select data-config="bytesize"><option value="8">8</option><option value="7">7</option></select></label>
+            <label data-serial hidden>Bity stopu<select data-config="stopbits"><option value="1">1</option><option value="2">2</option></select></label>
+          </div></details>
+        </section>
+        <section data-page="1" hidden>
+          <h2>Dostęp do licznika</h2><p class="intro">Wybierz uwierzytelnianie przypisane do adresu klienta. Takie przypisanie określa asocjacja licznika.</p>
+          <div class="fields">
+            <label class="wide">Uwierzytelnianie<select data-config="authentication"><option value="none">Brak · sesja publiczna</option><option value="lls">LLS · hasło</option><option value="hls_gmac">HLS · GMAC</option><option value="hls_sha256">HLS · SHA-256</option><option value="hls">HLS · AES</option><option value="hls_sha1">HLS · SHA-1 (starsze urządzenia)</option><option value="hls_md5">HLS · MD5 (starsze urządzenia)</option></select></label>
+            <label data-password>Format hasła<select data-config="password_format"><option value="hex">HEX · wartości bajtów</option><option value="text">Tekst · zgodnie z konfiguracją licznika</option></select></label>
+            <label data-password>Hasło<input data-config="password" type="password" data-secret autocomplete="new-password" spellcheck="false"><small data-secret-status="password">Nie zapisano hasła.</small></label>
+            <label data-encoding hidden>Kodowanie tekstu<select data-config="text_encoding"><option value="utf-8">UTF-8</option><option value="ascii">ASCII</option><option value="latin-1">Latin-1</option></select></label>
+            <label class="wide">Zabezpieczenie wiadomości<select data-config="security"><option value="none">Brak</option><option value="authentication">Uwierzytelnianie wiadomości</option><option value="encryption">Szyfrowanie</option><option value="both">Uwierzytelnianie i szyfrowanie</option></select><small>Zabezpieczenie wiadomości jest niezależne od mechanizmu uwierzytelniania LLS/HLS.</small></label>
+          </div>
+          <div id="security-fields" hidden><h3>Klucze i identyfikatory systemowe (system title)</h3><div class="fields">
+            <label>Identyfikator systemowy klienta [HEX]<input data-config="client_system_title" spellcheck="false" autocomplete="off"><small>8 bajtów. Każdy niezależny czytnik musi mieć własny identyfikator.</small></label>
+            <label>Identyfikator systemowy licznika [HEX]<input data-config="server_system_title" spellcheck="false" autocomplete="off"><small>Wymagany w HLS-SHA256. W GMAC zwykle pochodzi z odpowiedzi licznika.</small></label>
+            <label data-keys>Zestaw zabezpieczeń<select data-config="security_suite"><option value="0">Suite 0 · AES-128</option><option value="2">Suite 2 · AES-256 (bez podpisów)</option></select></label>
+            <label data-keys>Klucz szyfrujący [HEX]<input data-config="block_cipher_key" type="password" data-secret autocomplete="new-password"><small data-secret-status="block_cipher_key"></small></label>
+            <label data-keys>Klucz uwierzytelniający [HEX]<input data-config="authentication_key" type="password" data-secret autocomplete="new-password"><small data-secret-status="authentication_key"></small></label>
+          </div></div>
+          <details id="counter-fields" hidden><summary>Licznik ramek (invocation counter)</summary><div class="fields">
+            <label class="wide">Synchronizacja<select data-config="counter_mode"><option value="public">Odczyt publiczny i zapis lokalny</option><option value="persistent">Zapis lokalny · osobny klient</option></select><small>Nie używaj tego samego identyfikatora i kluczy w dwóch czytnikach. Przy przenoszeniu instalacji zachowaj dane dodatku.</small></label>
+            <label>OBIS licznika ramek<input data-config="frame_counter_obis"></label>
+            <label>Adres klienta publicznego<input data-config="fc_client_address" type="number" min="1"></label>
+          </div></details>
+          <p class="note">Dodatek nie zwraca zapisanych haseł ani kluczy. Puste pole zachowuje dotychczasową wartość.</p>
+        </section>
+        <section data-page="2" hidden>
+          <h2>Pobierz rejestry i wybierz pomiary</h2><p class="intro">Najpierw pobierz listę z licznika. Następnie rozwiń grupę i zaznacz pomiary do odczytu.</p>
+          <div class="actions"><button type="button" id="objects">Pobierz rejestry z licznika</button><button type="button" id="test" class="quiet">Zapisz i przetestuj połączenie</button></div>
+          <div id="test-result" class="result" role="status">Test nie był jeszcze uruchomiony.</div>
+          <div class="table-heading"><h3>Rejestry do odczytu</h3><span id="register-count"></span></div>
+          <label id="search-label" hidden>Filtruj listę<input id="register-search" type="search" placeholder="OBIS lub nazwa rejestru"></label>
+          <p id="catalog-state" class="note" role="status"></p>
+          <details id="obis-sources" hidden><summary>Źródła opisów OBIS</summary><p class="note">Polskie opisy pochodzą z opublikowanych tabel kodów. Niepotwierdzone kody zachowują opis źródłowy. Własna nazwa rejestru może różnić się od opisu OBIS.</p><ul id="obis-source-list"></ul></details>
+          <p class="note" id="metadata-note" hidden>Jednostka licznika i kod OBIS określają domyślne parametry HA. Parametry HA każdego rejestru można zmienić po rozwinięciu jego ustawień.</p>
+          <div id="registers"></div>
+          <p id="register-empty" class="note">Pobierz listę rejestrów z licznika, aby wybrać pomiary.</p>
+        </section>
+        <section data-page="3" hidden>
+          <h2>Integracja Home Assistant</h2><p class="intro">Integracja DLMS/COSEM Reader pobiera pomiary bezpośrednio z API dodatku. Broker MQTT nie jest wymagany.</p>
+          <div class="actions"><button type="button" id="discover">Zgłoś integrację w Home Assistant</button><button type="button" id="pairing" class="quiet">Dane połączenia ręcznego</button></div>
+          <p class="note">Najpierw trzeba zainstalować integrację DLMS/COSEM Reader. Po zgłoszeniu można ją skonfigurować w Ustawienia → Urządzenia i usługi.</p>
+          <div id="pairing-fields" class="fields" hidden>
+            <label>Adres API<input id="api-host" readonly></label><label>Port API<input id="api-port" readonly></label>
+            <label class="wide">Token API<input id="api-token" type="password" readonly autocomplete="off"><small>Token daje dostęp tylko do pomiarów i ich parametrów. API nie zwraca haseł ani kluczy licznika.</small></label>
+            <button type="button" id="show-api-token" class="quiet">Pokaż token</button>
+          </div>
+          <div class="fields"><label>Odczyt co [s]<input data-config="poll_interval" type="number" min="5" max="86400"></label><label class="check"><input data-config="autostart" type="checkbox">Wznawiaj odczyt po uruchomieniu dodatku</label></div>
+          <details><summary>Opcjonalna publikacja MQTT</summary><label class="check"><input data-config="mqtt_enabled" type="checkbox">Publikacja MQTT</label><div class="fields" id="mqtt-fields" hidden>
+            <label class="check wide"><input data-config="mqtt_discovery" type="checkbox">MQTT Discovery · tworzenie dodatkowych encji MQTT</label>
+            <label>Adres brokera<input data-config="mqtt.host" placeholder="Puste pole: usługa MQTT w HA"></label><label>Port<input data-config="mqtt.port" type="number" min="1" max="65535"></label>
+            <label>Użytkownik<input data-config="mqtt.username" autocomplete="off"></label><label>Hasło brokera<input data-config="mqtt.password" type="password" data-secret autocomplete="new-password"><small data-secret-status="mqtt.password"></small></label>
+            <label>Prefiks Discovery<input data-config="mqtt.discovery_prefix"></label><label class="check"><input data-config="mqtt.tls" type="checkbox">TLS z weryfikacją certyfikatu</label>
+          </div></details>
+          <div class="actions"><button type="button" id="start">Zapisz i uruchom odczyt</button></div>
+          <h3>Ostatnie pomiary</h3><p id="last-poll" class="note">Brak odczytów w tej sesji.</p><div class="table-scroll"><table><thead><tr><th scope="col">Pomiar</th><th scope="col">Wartość</th></tr></thead><tbody id="measurements"></tbody></table></div>
+        </section>
+        <footer class="form-footer"><button type="button" id="back" class="quiet">Wstecz</button><button type="button" id="save" class="quiet">Zapisz ustawienia</button><button type="button" id="next">Dalej: dostęp</button></footer>
+      </form>
+      <aside aria-label="Podsumowanie konfiguracji"><h2>Podsumowanie połączenia</h2><dl id="summary"></dl><div class="aside-note">Dodatek odczytuje licznik. Integracja pobiera pomiary z API i nie otwiera kolejnego połączenia z licznikiem.</div><p id="live-state" aria-live="polite"></p></aside>
+    </div>
+  </main>
+  <footer class="page-footer">DLMS/COSEM Reader · 0.2.5 <span>Odczyt bez zapisu parametrów licznika</span></footer>
+</body>
+</html>

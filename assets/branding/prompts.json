@@ -1,0 +1,22 @@
+{
+  "generator": "image_gen (built-in)",
+  "palette": {
+    "teal": "#007A70",
+    "petrol": "#142D31",
+    "mint": "#62DCC6"
+  },
+  "assets": [
+    {
+      "master": "dlms-addon-master.png",
+      "role": "add-on: meter, pulse and connector feet",
+      "prompt": "Use case: logo-brand. Asset: production app icon for an open-source DLMS/COSEM meter reader Home Assistant add-on. Create ONE striking, carefully drawn flat vector-style glyph on genuine transparent background, square 1:1 canvas, no text whatsoever. This is the METER READER member of a coordinated two-icon family. Subject: a compact modern measurement instrument, a thick rounded-square deep teal enclosure with a generous white circular dial inset. Inside the dial, a bold deep teal angular pulse/step waveform doubles as a meter pointer; a small vivid mint arc hugs the upper right of the dial. Two short substantial teal connector feet under the enclosure subtly suggest data acquisition. Elegant generous negative space, extremely simple construction, decisive strong silhouette, balanced central composition, consistent rounded stroke ends. Teal #007A70, deep petrol #142D31, mint #62DCC6 and white only. Main glyph fills about 80% of canvas, neatly centered with equal padding; transparent outside the glyph, white dial remains opaque. Professional polished open-source infrastructure identity, recognizable down to 32 pixels. No letters, no numbers, no words, no mockups, no presentation board, no multiple icons, no drop shadows, no gradients, no lighting effects, no fine tick marks, no photorealism, no Home Assistant or manufacturer logos."
+    },
+    {
+      "master": "dlms-integration-master.png",
+      "role": "integration: connected nodes",
+      "reference": "dlms-addon-master.png",
+      "prompt": "Use case: logo-brand. Asset: Home Assistant custom INTEGRATION icon for the same DLMS/COSEM Reader family. Edit the supplied METER READER icon to create its matching INTEGRATION sibling. Keep EXACTLY its deep teal rounded-square enclosure, scale, padding, white circular inset, flat graphic style, mint accent color, rounded joins and strong visual weight. Change the interior symbol: replace the meter pulse and mint dial arc with a simple bold deep petrol connected network of THREE circular nodes joined by substantial rounded lines in a clean Y topology. The top-right node is mint; the other two nodes and connectors are deep petrol. Large nodes, clear white negative space, easily readable at 32 pixels. Remove the two connector feet below the enclosure so the integration has an uninterrupted rounded-square silhouette; keep the main enclosure the same dimensions and position. The shared body signifies DLMS/COSEM, the connected-node center signifies integration and data linking. One icon alone, square image, real transparent background outside glyph; white inset opaque. No text, letters, numbers, official HA logos, manufacturer marks, watermark, shadow, 3D, gradients, extra tiny dots, presentation layout or multiple variants."
+    }
+  ],
+  "packaging": "Original transparent PNGs preserved. Platform-sized copies produced with macOS sips. No manual drawing or compositing."
+}

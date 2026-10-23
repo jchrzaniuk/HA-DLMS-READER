@@ -1,0 +1,41 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "DLMS/COSEM Reader",
+        "description": "Connect to the read-only reader API. Migration preserves entity IDs and history. Disable the reader MQTT output before migration.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "token": "API token",
+          "migrate_mqtt": "Migrate existing MQTT entities"
+        }
+      },
+      "confirm": {
+        "title": "Connect {name}",
+        "description": "Connect the discovered reader. Existing MQTT entities can be migrated while retaining their IDs and history.",
+        "data": {
+          "migrate_mqtt": "Migrate existing MQTT entities"
+        }
+      },
+      "reauth_confirm": {
+        "title": "API authentication",
+        "data": {
+          "token": "API token"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to the reader API.",
+      "invalid_auth": "The API token was rejected.",
+      "mqtt_enabled": "Disable the MQTT output in the reader before migrating existing entities."
+    },
+    "abort": {
+      "already_configured": "This reader is already configured.",
+      "cannot_connect": "Cannot connect to the reader API.",
+      "wrong_device": "The endpoint belongs to a different device.",
+      "reauth_successful": "API authentication updated."
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "DLMS/COSEM Reader",
+        "description": "Integracja pobiera pomiary z dodatku DLMS/COSEM Reader. Adres, port i token znajdują się w sekcji „Dane połączenia ręcznego” dodatku. Przed przeniesieniem encji MQTT trzeba wyłączyć publikację MQTT w dodatku.",
+        "data": {
+          "host": "Adres dodatku",
+          "port": "Port",
+          "token": "Token API",
+          "migrate_mqtt": "Przenieś istniejące encje MQTT"
+        }
+      },
+      "confirm": {
+        "title": "Połączenie: {name}",
+        "description": "Wykryto dodatek DLMS/COSEM Reader. Można połączyć go z integracją i przenieść istniejące encje MQTT z zachowaniem identyfikatorów i historii.",
+        "data": {
+          "migrate_mqtt": "Przenieś istniejące encje MQTT"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Nowy token API",
+        "data": {
+          "token": "Token API"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Nie można połączyć się z dodatkiem. Sprawdź jego działanie, adres i port API.",
+      "invalid_auth": "Dodatek odrzucił token API. Skopiuj token z sekcji „Dane połączenia ręcznego”.",
+      "mqtt_enabled": "Przed przeniesieniem encji wyłącz publikację MQTT w dodatku."
+    },
+    "abort": {
+      "already_configured": "Ten licznik jest już połączony z integracją.",
+      "cannot_connect": "Nie można połączyć się z dodatkiem. Sprawdź jego działanie, adres i port API.",
+      "wrong_device": "Pod tym adresem API działa inny licznik. Sprawdź adres dodatku.",
+      "reauth_successful": "Zapisano nowy token API."
+    }
+  }
+}

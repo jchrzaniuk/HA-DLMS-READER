@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+.DS_Store
+captures/
+
+# Pliki z kluczami licznika — nigdy do repozytorium.
+Pakiety*.xml
+*.xml
+
+# Lokalny plik środowiskowy demona z sekretami.
+bridge/bridge.env
+/tmp/
+/output/
