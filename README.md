@@ -5,10 +5,11 @@ a integracja tworzy encje z jego pomiarów. MQTT jest opcjonalne.
 
 | Element | Zadanie | Sposób instalacji |
 | --- | --- | --- |
-| Integracja | Pobiera pomiary z API dodatku i tworzy encje w HA | Ręcznie; planowana dystrybucja przez HACS |
+| Integracja | Pobiera pomiary z API dodatku i tworzy encje w HA | HACS: repozytorium niestandardowe lub instalacja ręczna |
 | Dodatek | Odczytuje licznik i udostępnia formularz konfiguracji | Repozytorium w sklepie dodatków HA |
 
-Projekt jest w fazie eksperymentalnej. Integracja nie została jeszcze opublikowana w HACS.
+Projekt jest w fazie eksperymentalnej. Integrację można dodać do HACS jako
+repozytorium niestandardowe. Nie znajduje się jeszcze w domyślnym katalogu HACS.
 
 ## Obsługiwane połączenia
 
@@ -28,6 +29,8 @@ optyczna IEC 62056-21, podpisy ECDSA ani profile obciążenia.
 Repozytorium dodatku: `https://github.com/jchrzaniuk/HA-DLMS-READER`.
 
 [Dodaj repozytorium w Home Assistant](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fjchrzaniuk%2FHA-DLMS-READER)
+
+[Otwórz integrację w HACS](https://my.home-assistant.io/redirect/hacs_repository/?owner=jchrzaniuk&repository=HA-DLMS-READER&category=integration)
 
 1. [Zainstalować dodatek](dlms_reader/README.md).
 2. [Ustawić połączenie z licznikiem i wybrać rejestry](dlms_reader/DOCS.md).
@@ -98,3 +101,20 @@ docker run --rm -v "$PWD:/workspace" -w /workspace -e PYTHONPATH=/workspace \
 
 Sprawdza uwierzytelnianie, dostępność pomiarów i migrację encji, także
 odtworzenie wpisów rejestru po błędzie.
+
+Walidację HACS i hassfest oraz test w HA Core uruchamia GitHub Actions.
+Archiwum do instalacji ręcznej można przygotować poleceniem:
+
+```sh
+.venv/bin/python scripts/package_integration.py --output output/dlms_reader.zip
+```
+
+Archiwum zawiera katalog `dlms_reader/`, który należy rozpakować
+w `custom_components/`. Dodatek nie jest częścią tego archiwum.
+
+## Licencja
+
+Projekt jest udostępniany na GNU GPL, wersja 2. Pełny tekst znajduje się
+w [LICENSE](LICENSE). Dodatek korzysta z biblioteki Gurux.DLMS.Python,
+również objętej GPL-2.0. Dokumenty producentów wskazane jako źródła opisów
+OBIS pozostają własnością ich autorów i nie są dołączone do pakietu.

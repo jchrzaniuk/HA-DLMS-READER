@@ -18,3 +18,20 @@ jobs:
       - run: python -m pip install -r requirements.txt
       - run: python -m unittest discover -s tests -v
       - run: node --check dlms_reader/app/static/app.js
+      - run: python scripts/package_integration.py --output output/dlms_reader.zip
+      - uses: actions/upload-artifact@v7.0.2
+        with:
+          name: dlms-reader-integration
+          path: output/dlms_reader.zip
+          if-no-files-found: error
+
+  native-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Test integration in Home Assistant Core
+        run: >-
+          docker run --rm -v "$GITHUB_WORKSPACE:/workspace" -w /workspace
+          -e PYTHONPATH=/workspace --entrypoint python
+          ghcr.io/home-assistant/home-assistant:2026.10.2
+          tests/component/check_native.py

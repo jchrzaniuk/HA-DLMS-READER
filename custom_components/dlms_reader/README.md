@@ -8,13 +8,32 @@ Połączenie z licznikiem obsługuje dodatek. MQTT nie jest potrzebne.
 
 Wymagany Home Assistant 2026.10 lub nowszy oraz działający
 [dodatek DLMS/COSEM Reader](../../dlms_reader/README.md).
-Planowana jest dystrybucja integracji przez HACS; obecnie obowiązuje
-instalacja ręczna. Dodatek instaluje się osobno w sklepie dodatków HA.
+Dodatek instaluje się osobno w sklepie dodatków HA. HACS pobiera wyłącznie
+integrację.
+
+### Przez HACS
+
+Repozytorium można dodać do HACS jako własne. Nie znajduje się jeszcze
+w domyślnym katalogu HACS.
+
+1. Otworzyć HACS i w menu wybrać **Repozytoria niestandardowe**.
+2. Podać `https://github.com/jchrzaniuk/HA-DLMS-READER`.
+3. Wybrać typ **Integracja** i dodać repozytorium.
+4. Pobrać **DLMS/COSEM Reader**.
+5. Uruchomić ponownie HA Core.
+
+[Otwórz repozytorium w HACS](https://my.home-assistant.io/redirect/hacs_repository/?owner=jchrzaniuk&repository=HA-DLMS-READER&category=integration)
+
+### Ręcznie
 
 1. Skopiować katalog `custom_components/dlms_reader` do katalogu konfiguracji HA.
 2. Uruchomić ponownie HA Core.
-3. W dodatku wybrać **Zgłoś integrację w Home Assistant**.
-4. Otworzyć **Ustawienia → Urządzenia i usługi** i skonfigurować wykrytą integrację.
+
+### Po instalacji
+
+1. W dodatku wybrać **Zgłoś integrację w Home Assistant**.
+2. Otworzyć **Ustawienia → Urządzenia i usługi**.
+3. Skonfigurować wykrytą integrację.
 
 Do konfiguracji ręcznej potrzebne są adres, port i token z sekcji
 **Dane połączenia ręcznego** w dodatku. Adres zależy od repozytorium instalacji;
@@ -63,3 +82,16 @@ Po przeniesieniu wpisów integracja usuwa ich konfigurację MQTT Discovery.
 Nie wyłącza integracji MQTT ani innych urządzeń korzystających z brokera.
 Zapis migracji znajduje się w danych HA pod kluczem
 `dlms_reader.migration.<entry_id>`.
+
+## Aktualizacja i usunięcie
+
+Aktualizację integracji pobiera się w HACS, a następnie uruchamia ponownie
+HA Core. Dodatek ma własne wersje i aktualizuje się osobno w sklepie HA.
+
+Aby usunąć integrację, należy usunąć jej wpis w **Ustawienia → Urządzenia
+i usługi**, a następnie usunąć pakiet w HACS i uruchomić ponownie HA Core.
+Nie usuwa to dodatku ani jego ustawień.
+
+## Licencja
+
+GNU GPL, wersja 2. Pełny tekst znajduje się w [LICENSE](LICENSE).
