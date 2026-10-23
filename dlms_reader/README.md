@@ -10,8 +10,8 @@ Projekt jest w fazie eksperymentalnej.
 ## Instalacja z repozytorium
 
 Wymagany Home Assistant z Supervisorem i dostęp do licznika przez TCP lub
-port szeregowy. Dodatek instaluje się w sklepie dodatków HA, osobno od
-integracji dostępnej docelowo przez HACS.
+port szeregowy. Dodatek instaluje się w sklepie dodatków HA.
+Integrację trzeba zainstalować osobno; jej dystrybucja przez HACS jest planowana.
 
 1. Otworzyć sklep dodatków HA i w menu wybrać **Repozytoria**.
 2. Dodać `https://github.com/jchrzaniuk/HA-DLMS-READER`.
