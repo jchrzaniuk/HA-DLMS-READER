@@ -6,7 +6,7 @@ instalowanego przez HACS.
 ## 0.2.1
 
 - Instalacja przez HACS po dodaniu repozytorium niestandardowego.
-- Kategoria energia oraz metadane i ikony integracji zgodne z wymaganiami HA.
+- Metadane i ikony integracji zgodne z wymaganiami HA.
 - Instrukcja instalacji, aktualizacji i usunięcia integracji.
 - Licencja GPL-2.0 dołączona do pakietu.
 
